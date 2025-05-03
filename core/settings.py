@@ -15,7 +15,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("CURRENT_ENV") == 'development'
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'user.CustomUser'
 
 # Application definition
 
@@ -27,8 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'todo',
+    'user',
     'rest_framework',
     'rest_framework_json_api',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -81,24 +83,29 @@ DATABASES = {
 }
 
 
-# Rest Framework all credentials
+# # Rest Framework all credentials
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
+    
+#     # 'DEFAULT_AUTHENTICATION_CLASSES': [
+#     #     'dqh_admin_app.auth.authentication.APITokenAuthentication',
+#     #     'rest_framework.authentication.SessionAuthentication',
+#     # ],
+    
+#     # 'DEFAULT_PERMISSION_CLASSES': [
+#     #     'dqh_admin_app.auth.permission.SuperAdminPermission',
+#     # ],
+
+#     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    
+#     # 'PAGE_SIZE': 20,
+# }
+
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
-    
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'dqh_admin_app.auth.authentication.APITokenAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ],
-    
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'dqh_admin_app.auth.permission.SuperAdminPermission',
-    # ],
-
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    
-    # 'PAGE_SIZE': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
