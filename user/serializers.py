@@ -1,18 +1,14 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers 
 from .models import CustomUser
 
 
-class UserSerializer(ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
             "username",
             "email",
             "password",
-            "is_active",
-            "is_admin",
-            "is_staff",
-            "is_superuser",
         ]
         extra_kwargs = {"password": {"write_only": True}}
 
@@ -28,3 +24,16 @@ class UserSerializer(ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
+    
+class LoginSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length = 150)
+    password = serializers.CharField(max_length = 150)
+    class Meta:
+        Model = CustomUser
+        fields = ["email", "password"]
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["email", "username"]
