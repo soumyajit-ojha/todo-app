@@ -10,11 +10,10 @@ from .models import Todo
 from .serializers import TodoSerializer
 
 
-    
 class TodoAPIView(APIView):
     """
     A simple API view to for all todos and any specific todo.
-    Depending upon path parameter. If no parameter return all todos, 
+    Depending upon path parameter. If no parameter return all todos,
     if any specif id return specific todo.
     """
 
@@ -23,13 +22,15 @@ class TodoAPIView(APIView):
 
     def get(self, request, pk=None, format=None):
         if pk is not None:
-            todo       = get_object_or_404(Todo, pk=pk)
+            todo = get_object_or_404(Todo, pk=pk)
             serializer = TodoSerializer(todo)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         queryset = Todo.objects.all()
         if not queryset:
-            return Response({"message":"No data found"}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"message": "No data found"}, status=status.HTTP_204_NO_CONTENT
+            )
 
         serializer = TodoSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -42,7 +43,7 @@ class TodoAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     def put(self, request: Request, pk: int):
         """
         APIView patch method to fully update a todo object.
@@ -63,13 +64,13 @@ class TodoAPIView(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-       
-    def delete(self, request: Request, pk:int):
+    def delete(self, request: Request, pk: int):
         """
         APIView delete method to delete a todo object.
         """
         todo = get_object_or_404(Todo, pk=pk)
         todo.delete()
 
-        return Response({"message" : "No conttent found"}, status=status.HTTP_204_NO_CONTENT)
-
+        return Response(
+            {"message": "No conttent found"}, status=status.HTTP_204_NO_CONTENT
+        )
