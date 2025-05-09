@@ -7,7 +7,7 @@ class CustomUserManager(BaseUserManager):
         if not username:
             raise ValueError("Username field must required.")
         user = self.model(
-            email = self.normalize_email(email),
+            email = self.normalize_email(email).lower(),
             username = username,
             **extra_fields
         )
