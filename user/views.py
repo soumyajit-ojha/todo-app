@@ -1,11 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status 
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-
-
+from . pagination import ProfileViewPagination
 
 from .models import CustomUser
 from .serializers import (
@@ -75,11 +75,17 @@ class ProfileAPIView(APIView):
 
 class AllUserProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
+    pagination_class = ProfileViewPagination
+    
     def get(self, request):
         try:
             all_users = CustomUser.objects.all()
-            serializer = ProfileSerializer(all_users, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            if all_users is None:
+                return Response({"message":"unable to find users."}, status=status.HTTP_200_OK)
+            paginator = self.pagination_class()
+            page = paginator.paginate_queryset(all_users, request, view=self)
+            serializer = ProfileSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
         except Exception as e:
             return Response({"errors": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
