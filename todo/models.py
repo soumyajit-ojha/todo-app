@@ -14,7 +14,7 @@ class Todo(models.Model):
     description = models.TextField()
     target_date = models.DateTimeField(null=True, blank=True)
     completed = models.BooleanField(default=False)
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, blank=True, null=True
     )
     status = models.CharField(

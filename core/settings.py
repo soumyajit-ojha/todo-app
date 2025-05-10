@@ -29,9 +29,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # packages
-    # 'rest_framework_json_api',
     "rest_framework",
     "rest_framework_simplejwt",
+    "django_filters",
     # apps
     "todo",
     "user",

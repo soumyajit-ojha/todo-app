@@ -5,6 +5,7 @@ class TodoSerializer(ModelSerializer):
     class Meta:
         model = Todo
         fields = [
+            "id",
             "title",
             "description",
             "target_date",
