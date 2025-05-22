@@ -90,6 +90,7 @@ class AllTodoAPIView(APIView):
             filter_set = TodoFilter(request.GET, queryset=queryset)     # filter
             search_query = request.query_params.get('search', None)     # search
 
+            # For Searched queryset
             if search_query:
                 queryset = Todo.objects.filter(
                     Q(title__icontains=search_query) |
@@ -98,13 +99,14 @@ class AllTodoAPIView(APIView):
                 serializer = TodoSerializer(queryset, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             
+            # For Filtered queryset
             if not filter_set.is_valid():
                 return Response(filter_set.errors, status=status.HTTP_400_BAD_REQUEST)
-            
             queryset = filter_set.qs
             if not queryset.exists():
                 raise ValueError("No todos found")
 
+            # For Normal queryset
             serializer = TodoSerializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
